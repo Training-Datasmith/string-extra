@@ -25,10 +25,10 @@ use Twig\TwigFilter;
 
 final class StringExtension extends AbstractExtension
 {
-    private $slugger;
-    private $englishInflector;
-    private $spanishInflector;
-    private $frenchInflector;
+    private readonly \Symfony\Component\String\Slugger\SluggerInterface $slugger;
+    private ?\Symfony\Component\String\Inflector\EnglishInflector $englishInflector = null;
+    private ?\Symfony\Component\String\Inflector\SpanishInflector $spanishInflector = null;
+    private ?\Symfony\Component\String\Inflector\FrenchInflector $frenchInflector = null;
 
     public function __construct(?SluggerInterface $slugger = null)
     {
@@ -38,10 +38,10 @@ final class StringExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('u', [$this, 'createUnicodeString']),
-            new TwigFilter('slug', [$this, 'createSlug']),
-            new TwigFilter('plural', [$this, 'plural']),
-            new TwigFilter('singular', [$this, 'singular']),
+            new TwigFilter('u', $this->createUnicodeString(...)),
+            new TwigFilter('slug', $this->createSlug(...)),
+            new TwigFilter('plural', $this->plural(...)),
+            new TwigFilter('singular', $this->singular(...)),
         ];
     }
 
